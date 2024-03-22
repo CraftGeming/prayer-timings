@@ -1,0 +1,63 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #cccccc;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  text-align: center;
+  background-color: #f2f2f2;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+}
+
+.current-time {
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+
+.input-container {
+  margin-top: 20px;
+}
+
+.input-container input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.input-container button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.input-container button:hover {
+  background-color: #45a049;
+}
+
+.prayer-time {
+  padding: 10px;
+  margin: 5px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}

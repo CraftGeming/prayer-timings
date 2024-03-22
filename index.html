@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prayer Times</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+  body {
+    font-family: Cairo, sans-serif;
+    background-color: rgb(34 49 63);
+    color: #333333;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .header {
+    background-color: #4a4a4a;
+    color: #eeeeee;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  .input-container {
+    margin-top: 20px;
+  }
+
+  .input-container input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .prayer-time {
+    display: none;
+    padding: 10px;
+    margin: 5px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  .circle-box {
+    width: calc(100% - 20px); /* طول مربع الوقت المحلي - 20 بكسل للهامش */
+    height: 50px;
+    background-color: #4a4a4a;
+    border-radius: 25px;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .circle-box p {
+    color: white;
+    margin: 0;
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <p>الوقت المحلي</p>
+    <p id="current-time">٢٣:١٦:١٢</p>
+  </div>
+  <div class="input-container">
+    <input id="country" class="rounded-md ring-2 ring-primary-400 border-0 px-8 inputRTL w-full text-xl text-primary-800" placeholder="اسم المدينة والدولة" type="text" name="search" value="فلسطيم">
+    <button id="submit">Submit</button>
+  </div>
+  <ul class="flex flex-col items-stretch max-w-md w-full gap-3 overflow-hidden" style="opacity: 1;">
+    <li id="fajr" class="flex py-3 px-5 items-center justify-between flex-1 w-full bg-primary-700 text-primary-200 rounded-md text-xl prayer-time" style="transform: translateX(0px) translateZ(0px);">
+      <div class="circle-box">
+        <p>الفجر</p>
+      </div>
+    </li>
+    <li id="dhuhr" class="flex py-3 px-5 items-center justify-between flex-1 w-full bg-primary-700 text-primary-200 rounded-md text-xl prayer-time" style="transform: translateX(0px) translateZ(0px);">
+      <div class="circle-box">
+        <p>الظهر</p>
+      </div>
+    </li>
+    <li id="asr" class="flex py-3 px-5 items-center justify-between flex-1 w-full bg-primary-700 text-primary-200 rounded-md text-xl prayer-time" style="transform: translateX(0px) translateZ(0px);">
+      <div class="circle-box">
+        <p>العصر</p>
+      </div>
+    </li>
+    <li id="maghrib" class="flex py-3 px-5 items-center justify-between flex-1 w-full bg-primary-700 text-primary-200 rounded-md text-xl prayer-time" style="transform: translateX(0px) translateZ(0px);">
+      <div class="circle-box">
+        <p>المغرب</p>
+      </div>
+    </li>
+    <li id="isha" class="flex py-3 px-5 items-center justify-between flex-1 w-full bg-primary-700 text-primary-200 rounded-md text-xl prayer-time" style="transform: translateX(0px) translateZ(0px);">
+      <div class="circle-box">
+        <p>العشاء</p>
+      </div>
+    </li>
+  </ul>
+</div> 
+
+<script>
+jQuery(function($) {
+  // تعريف وظيفة لجلب الوقت الحالي وتحديث الوقت على الصفحة
+  function updateCurrentTime() {
+    var currentTime = new Date().toLocaleTimeString('en-US', {hour12: false});
+    $('#current-time').text('الوقت الحالي: ' + currentTime);
+  }
+
+  // تحديث الوقت الحالي عندما يتم تحميل الصفحة لأول مرة
+  updateCurrentTime();
+
+  // تحديث الوقت الحالي بانتظام كل ثانية (1000 مللي ثانية)
+  setInterval(updateCurrentTime, 1000);
+
+  $('#country').keyup(function(event) {
+    if (event.keyCode === 13) {
+      $('#submit').click();
+    }
+  });
+
+  $('#submit').click(function() {
+    var country = $('#country').val();
+
+    $.getJSON('https://muslimsalat.com/' + country + '/daily.json?key=API_KEY&jsoncallback=?', function(times) {
+      var currentTime = new Date().toLocaleTimeString('en-US', {hour12: false});
+      $('#current-time').text('Today in ' + times.title + ': ' + currentTime);
+      $('#fajr').find('p').text('Fajr: ' + times.items[0].fajr);
+      $('#dhuhr').find('p').text('Dhuhr: ' + times.items[0].dhuhr);
+      $('#asr').find('p').text('Asr: ' + times.items[0].asr);
+      $('#maghrib').find('p').text('Maghrib: ' + times.items[0].maghrib);
+      $('#isha').find('p').text('Isha: ' + times.items[0].isha);
+      $('.prayer-time').show().css('animation', 'fadeIn 1s ease-in-out');
+    });
+  });
+});
+</script>
+
+</body>
+</html>
